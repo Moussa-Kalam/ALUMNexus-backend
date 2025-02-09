@@ -12,4 +12,6 @@ ENV PORT=3000
 
 EXPOSE $PORT
 
+RUN npm rebuild bcrypt --build-from-source
+
 CMD [ "npm", "run", "start:dev" ]
