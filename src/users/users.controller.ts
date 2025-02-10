@@ -1,7 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ActiveUser } from '../iam/decorators/active-user-decorator';
+import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Controller('users')
 export class UsersController {
@@ -12,8 +22,10 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+  // This is an example on how to get the email of the logged-in user
   @Get()
-  findAll() {
+  findAll(@ActiveUser('email') email: ActiveUserData['email']) {
+    console.log(email);
     return this.usersService.findAll();
   }
 
