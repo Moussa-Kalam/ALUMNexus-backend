@@ -1,7 +1,7 @@
 import {
   ConflictException,
+  Inject,
   Injectable,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,12 +11,18 @@ import { HashingService } from '../hashing/hashing.service';
 import { SignUpDto } from './dto/sign-up.dto';
 import { pgUniqueViolationErrorCode } from '../../common/constants';
 import { SignInDto } from './dto/sign-in.dto';
+import jwtConfig from '../config/jwt.config';
+import { ConfigType } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthenticationService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly hashingService: HashingService,
+    private readonly jwtService: JwtService,
+    @Inject(jwtConfig.KEY)
+    private jwtConfiguration: ConfigType<typeof jwtConfig>,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -43,7 +49,7 @@ export class AuthenticationService {
     });
 
     if (!user) {
-      throw new NotFoundException('User with this email does not exist');
+      throw new UnauthorizedException('User with this email does not exist');
     }
 
     const isPasswordValid = await this.hashingService.compare(
@@ -55,7 +61,20 @@ export class AuthenticationService {
       throw new UnauthorizedException('Invalid password');
     }
 
-    // TODO: Implement JWT Token generation later
-    return true;
+    const accessToken = await this.jwtService.signAsync(
+      {
+        sub: user.id,
+        email: user.email,
+        accountType: user.accountType,
+      },
+      {
+        audience: this.jwtConfiguration.audience,
+        issuer: this.jwtConfiguration.issuer,
+        secret: this.jwtConfiguration.secret,
+        expiresIn: this.jwtConfiguration.accessTokenTtl,
+      },
+    );
+
+    return { accessToken };
   }
 }
