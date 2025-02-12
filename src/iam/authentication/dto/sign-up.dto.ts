@@ -26,7 +26,5 @@ export class SignUpDto {
   password: string;
 
   @IsEnum(UserRoles)
-  @MinLength(6)
-  @MaxLength(16)
   accountType: UserRoles;
 }

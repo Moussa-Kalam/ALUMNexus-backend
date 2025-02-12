@@ -3,4 +3,5 @@ export enum UserRoles {
   'FACULTY' = 'Faculty',
   'STUDENT' = 'Student',
   'COMPANY' = 'Company',
+  'ADMIN' = 'Admin',
 }
