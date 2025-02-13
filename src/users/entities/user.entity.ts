@@ -27,4 +27,10 @@ export class User {
     default: UserRoles.ALUMNUS,
   })
   accountType: UserRoles;
+
+  @Column({ default: false })
+  isTfaEnabled: boolean;
+
+  @Column({ nullable: true })
+  tfaSecret: string;
 }
