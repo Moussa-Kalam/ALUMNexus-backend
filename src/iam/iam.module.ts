@@ -15,6 +15,8 @@ import { AuthenticationGuard } from './authentication/guards/authentication.guar
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage';
 import { RolesGuard } from './authorization/guards/roles/roles.guard';
 import { OtpAuthenticationService } from './authentication/otp-authentication.service';
+import { GoogleAuthenticationService } from './authentication/social/google-authentication.service';
+import { GoogleAuthenticationController } from './authentication/social/google-authentication.controller';
 
 @Module({
   imports: [
@@ -39,7 +41,8 @@ import { OtpAuthenticationService } from './authentication/otp-authentication.se
     AuthenticationService,
     RefreshTokenIdsStorage,
     OtpAuthenticationService,
+    GoogleAuthenticationService,
   ],
-  controllers: [AuthenticationController],
+  controllers: [AuthenticationController, GoogleAuthenticationController],
 })
 export class IamModule {}
