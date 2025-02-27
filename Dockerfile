@@ -4,6 +4,8 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
+RUN npm run build
+
 RUN npm ci --production
 
 COPY . .
