@@ -20,6 +20,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { RefreshTokenIdsStorage } from './refresh-token-ids.storage';
 import { randomUUID } from 'crypto';
 import { OtpAuthenticationService } from './otp-authentication.service';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -81,6 +82,31 @@ export class AuthenticationService {
     }
 
     return await this.generateTokens(user);
+  }
+
+  async changePassword(
+    email: ActiveUserData['email'],
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    const user = await this.userRepository.findOneBy({
+      email,
+    });
+
+    const isPasswordValid = await this.hashingService.compare(
+      changePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid password');
+    }
+
+    const newHashedPassword = await this.hashingService.hash(
+      changePasswordDto.newPassword,
+    );
+
+    user.password = newHashedPassword;
+    await this.userRepository.save(user);
   }
 
   public async generateTokens(user: User) {
