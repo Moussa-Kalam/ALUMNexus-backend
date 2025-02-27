@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm ci --production
 
 COPY . .
 
@@ -14,4 +14,4 @@ EXPOSE $PORT
 
 RUN npm rebuild bcrypt --build-from-source
 
-CMD [ "npm", "run", "start:dev" ]
+CMD [ "npm", "run", "start:prod" ]
