@@ -15,7 +15,7 @@ import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 import { Roles } from '../iam/authorization/decorators/roles.decorator';
 import { UserRoles } from '../common/enums/roles.enum';
 
-@Roles(UserRoles.ADMIN)
+@Roles(UserRoles.FACULTY)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}

@@ -19,7 +19,7 @@ import { Response } from 'express';
 import { toFileStream } from 'qrcode';
 
 @Auth(AuthType.None)
-@Controller('authentication')
+@Controller('auth')
 export class AuthenticationController {
   constructor(
     private readonly authenticationService: AuthenticationService,
