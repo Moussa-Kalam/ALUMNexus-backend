@@ -12,10 +12,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ActiveUser } from '../iam/decorators/active-user-decorator';
 import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
-import { Roles } from '../iam/authorization/decorators/roles.decorator';
-import { UserRoles } from '../common/enums/roles.enum';
 
-@Roles(UserRoles.FACULTY)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
