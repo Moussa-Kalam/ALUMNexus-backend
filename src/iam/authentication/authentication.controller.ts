@@ -3,8 +3,11 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Patch,
   Post,
+  Put,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -17,6 +20,7 @@ import { ActiveUserData } from '../interfaces/active-user-data.interface';
 import { OtpAuthenticationService } from './otp-authentication.service';
 import { Response } from 'express';
 import { toFileStream } from 'qrcode';
+import { ChangePasswordDto } from './dto/change-password.dto';
 
 @Auth(AuthType.None)
 @Controller('auth')
@@ -63,4 +67,19 @@ export class AuthenticationController {
 
     return toFileStream(response, uri);
   }
+
+  // TODO: POST Change Password
+  @Auth(AuthType.Bearer)
+  @Patch('change-password')
+  async changePassword(
+    @Body() changePasswordDto: ChangePasswordDto,
+    @ActiveUser() activeUser: ActiveUserData,
+  ) {
+    return this.authenticationService.changePassword(
+      activeUser.email,
+      changePasswordDto,
+    );
+  }
+  // TODO: Forgot Password
+  // TODO: Reset Password
 }
