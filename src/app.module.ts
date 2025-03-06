@@ -5,6 +5,13 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { IamModule } from './iam/iam.module';
+import { AlumniProfileModule } from './alumni-profile/alumni-profile.module';
+import { MissionModule } from './mission/mission.module';
+import { GcgoModule } from './gcgo/gcgo.module';
+import { EducationModule } from './education/education.module';
+import { SkillsModule } from './skills/skills.module';
+import { ProjectModule } from './project/project.module';
+import { CareerModule } from './career/career.module';
 
 @Module({
   imports: [
@@ -24,6 +31,13 @@ import { IamModule } from './iam/iam.module';
     }),
     UsersModule,
     IamModule,
+    AlumniProfileModule,
+    MissionModule,
+    GcgoModule,
+    EducationModule,
+    SkillsModule,
+    ProjectModule,
+    CareerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

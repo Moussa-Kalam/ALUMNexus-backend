@@ -1,5 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserRoles } from '../../common/enums/roles.enum';
+import { AlumniProfile } from '../../alumni-profile/entities/alumni-profile.entity';
 
 @Entity()
 export class User {
@@ -8,9 +15,6 @@ export class User {
 
   @Column()
   firstName: string;
-
-  @Column({ nullable: true })
-  middleName: string;
 
   @Column()
   lastName: string;
@@ -27,6 +31,10 @@ export class User {
     default: UserRoles.ALUMNUS,
   })
   accountType: UserRoles;
+
+  @OneToOne(() => AlumniProfile, (profile) => profile.user, { nullable: true })
+  @JoinColumn()
+  alumniProfile?: AlumniProfile;
 
   @Column({ default: false })
   isTfaEnabled: boolean;
