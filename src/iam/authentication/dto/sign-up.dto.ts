@@ -1,12 +1,5 @@
 import { UserRoles } from '../../../common/enums/roles.enum';
-import {
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsString } from 'class-validator';
 
 export class SignUpDto {
   @IsString()
@@ -14,10 +7,6 @@ export class SignUpDto {
 
   @IsString()
   lastName: string;
-
-  @IsOptional()
-  @IsString()
-  middleName: string;
 
   @IsEmail()
   email: string;
