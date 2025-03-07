@@ -4,10 +4,14 @@ import { UpdateAlumniProfileDto } from './dto/update-alumni-profile.dto';
 import { Repository } from 'typeorm';
 import { AlumniProfile } from './entities/alumni-profile.entity';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AlumniProfileService {
-  constructor(private readonly alumniRepository: Repository<AlumniProfile>) {}
+  constructor(
+    @InjectRepository(AlumniProfile)
+    readonly alumniRepository: Repository<AlumniProfile>,
+  ) {}
 
   create(createAlumniProfileDto: CreateAlumniProfileDto) {
     return 'This action adds a new alumniProfile';
