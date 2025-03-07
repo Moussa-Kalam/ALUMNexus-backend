@@ -22,9 +22,8 @@ export class AlumniProfileController {
   @Post()
   create(
     @Body() createAlumniProfileDto: CreateAlumniProfileDto,
-    @ActiveUser() user: ActiveUserData,
   ) {
-    return this.alumniProfileService.create(createAlumniProfileDto, user);
+    return this.alumniProfileService.create(createAlumniProfileDto);
   }
 
   @Get()
