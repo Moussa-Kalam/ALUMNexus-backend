@@ -83,6 +83,10 @@ export class AuthenticationService {
     return await this.generateTokens(user);
   }
 
+  async logout(user: ActiveUserData) {
+    await this.refreshTokenIdsStorage.invalidate(user.sub);
+  }
+
   async changePassword(
     email: ActiveUserData['email'],
     changePasswordDto: ChangePasswordDto,

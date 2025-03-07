@@ -5,9 +5,7 @@ import {
   HttpStatus,
   Patch,
   Post,
-  Put,
   Res,
-  UseGuards,
 } from '@nestjs/common';
 import { AuthenticationService } from './authentication.service';
 import { SignUpDto } from './dto/sign-up.dto';
@@ -22,7 +20,7 @@ import { Response } from 'express';
 import { toFileStream } from 'qrcode';
 import { ChangePasswordDto } from './dto/change-password.dto';
 
-@Auth(AuthType.None)
+@Auth(AuthType.Bearer)
 @Controller('auth')
 export class AuthenticationController {
   constructor(
@@ -30,15 +28,22 @@ export class AuthenticationController {
     private readonly optAuthenticationService: OtpAuthenticationService,
   ) {}
 
+  @Auth(AuthType.None)
   @Post('sign-up')
   signUp(@Body() signUpDto: SignUpDto) {
     return this.authenticationService.signUp(signUpDto);
   }
 
+  @Auth(AuthType.None)
   @HttpCode(HttpStatus.OK)
   @Post('sign-in')
   signIn(@Body() signInDto: SignInDto) {
     return this.authenticationService.signIn(signInDto);
+  }
+
+  @Post('logout')
+  async logout(@ActiveUser() activeUser: ActiveUserData) {
+    return this.authenticationService.logout(activeUser);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -47,7 +52,6 @@ export class AuthenticationController {
     return this.authenticationService.refreshTokens(refreshTokenDto);
   }
 
-  @Auth(AuthType.Bearer)
   @HttpCode(HttpStatus.OK)
   @Post('2fa/generate')
   async generateQrCode(
@@ -69,7 +73,6 @@ export class AuthenticationController {
   }
 
   // TODO: POST Change Password
-  @Auth(AuthType.Bearer)
   @Patch('change-password')
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
@@ -80,6 +83,7 @@ export class AuthenticationController {
       changePasswordDto,
     );
   }
+
   // TODO: Forgot Password
   // TODO: Reset Password
 }

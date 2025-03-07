@@ -14,6 +14,8 @@ export class AlumniProfileService {
   ) {}
 
   create(createAlumniProfileDto: CreateAlumniProfileDto) {
+    const alumniProfile = this.alumniRepository.create(createAlumniProfileDto);
+
     return 'This action adds a new alumniProfile';
   }
 
