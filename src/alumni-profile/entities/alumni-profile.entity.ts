@@ -44,9 +44,6 @@ export class AlumniProfile {
   @Column({ nullable: true })
   photo?: string;
 
-  @Column()
-  createdAt: Date;
-
   @OneToOne(() => Mission, { cascade: true, eager: true })
   @JoinColumn()
   mission: Mission;
@@ -63,4 +60,7 @@ export class AlumniProfile {
   @ManyToMany(() => Skill, (skill) => skill.alumni)
   @JoinTable()
   skills: Skill[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }
