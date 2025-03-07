@@ -22,8 +22,11 @@ export class AlumniProfileService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} alumniProfile`;
+  findOne(id: string) {
+    return this.alumniRepository.findOne({
+      where: { id },
+      relations: ['mission', 'education', 'careers', 'projects', 'skills'],
+    });
   }
 
   update(id: number, updateAlumniProfileDto: UpdateAlumniProfileDto) {

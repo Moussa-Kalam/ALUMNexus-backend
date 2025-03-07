@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -13,7 +14,6 @@ import { Education } from '../../education/entities/education.entity';
 import { Career } from '../../career/entities/career.entity';
 import { Project } from '../../project/entities/project.entity';
 import { Skill } from '../../skills/entities/skill.entity';
-import { JoinColumn } from 'typeorm/browser';
 
 @Entity()
 export class AlumniProfile {

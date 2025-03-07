@@ -29,7 +29,7 @@ export class AlumniProfileController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.alumniProfileService.findOne(+id);
+    return this.alumniProfileService.findOne(id);
   }
 
   @Patch(':id')
