@@ -15,8 +15,8 @@ export class Education {
   @Column()
   graduationYear: number;
 
-  @ManyToOne(() => AlumniProfile, (alumni) => alumni.education, {
+  @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.education, {
     onDelete: 'CASCADE',
   })
-  alumni: AlumniProfile;
+  alumnus: AlumniProfile;
 }

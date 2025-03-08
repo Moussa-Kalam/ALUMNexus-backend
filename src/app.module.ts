@@ -12,6 +12,7 @@ import { EducationModule } from './education/education.module';
 import { SkillsModule } from './skills/skills.module';
 import { ProjectModule } from './project/project.module';
 import { CareerModule } from './career/career.module';
+import { OpportunityModule } from './opportunity/opportunity.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { CareerModule } from './career/career.module';
     SkillsModule,
     ProjectModule,
     CareerModule,
+    OpportunityModule,
   ],
   controllers: [AppController],
   providers: [AppService],

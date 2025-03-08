@@ -12,19 +12,14 @@ import { AlumniProfileService } from './alumni-profile.service';
 import { CreateAlumniProfileDto } from './dto/create-alumni-profile.dto';
 import { UpdateAlumniProfileDto } from './dto/update-alumni-profile.dto';
 import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
-import { ActiveUser } from '../iam/decorators/active-user-decorator';
-import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 
 @Controller('alumni-profile')
 export class AlumniProfileController {
   constructor(private readonly alumniProfileService: AlumniProfileService) {}
 
   @Post()
-  create(
-    @Body() createAlumniProfileDto: CreateAlumniProfileDto,
-    @ActiveUser() user: ActiveUserData,
-  ) {
-    return this.alumniProfileService.create(createAlumniProfileDto, user);
+  create(@Body() createAlumniProfileDto: CreateAlumniProfileDto) {
+    return this.alumniProfileService.create(createAlumniProfileDto);
   }
 
   @Get()

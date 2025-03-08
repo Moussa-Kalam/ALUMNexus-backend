@@ -2,7 +2,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -14,14 +13,22 @@ import { Education } from '../../education/entities/education.entity';
 import { Career } from '../../career/entities/career.entity';
 import { Project } from '../../project/entities/project.entity';
 import { Skill } from '../../skills/entities/skill.entity';
+import { Opportunity } from '../../opportunity/entities/opportunity.entity';
+import { GCGO } from '../../gcgo/entities/gcgo.entity';
 
 @Entity()
 export class AlumniProfile {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => User, (user) => user.alumniProfile, { onDelete: 'CASCADE' })
-  user: User;
+  @Column()
+  firstName: string;
+
+  @Column()
+  lastName: string;
+
+  @Column({ nullable: true })
+  photo?: string;
 
   @Column()
   professionalTitle: string;
@@ -41,25 +48,31 @@ export class AlumniProfile {
   @Column({ nullable: true })
   website?: string;
 
-  @Column({ nullable: true })
-  photo?: string;
-
   @OneToOne(() => Mission, { cascade: true, eager: true })
   @JoinColumn()
   mission: Mission;
 
-  @OneToMany(() => Education, (education) => education.alumni)
+  @OneToMany(() => Education, (education) => education.alumnus)
   education: Education[];
 
-  @OneToMany(() => Career, (career) => career.alumni)
-  careers: Career[];
+  @OneToMany(() => Career, (career) => career.alumnus)
+  experiences: Career[];
 
-  @OneToMany(() => Project, (project) => project.alumni)
+  @OneToMany(() => Project, (project) => project.alumnus)
   projects: Project[];
 
-  @ManyToMany(() => Skill, (skill) => skill.alumni)
-  @JoinTable()
+  @OneToMany(() => Skill, (skill) => skill.alumnus)
   skills: Skill[];
+
+  @OneToMany(() => Opportunity, (opportunity) => opportunity.alumnus)
+  opportunities: Opportunity[];
+
+  @ManyToMany(() => GCGO, (gcgo) => gcgo.alumni)
+  @JoinColumn()
+  gcgos: GCGO[];
+
+  @OneToOne(() => User, (user) => user.alumniProfile, { onDelete: 'CASCADE' })
+  user: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

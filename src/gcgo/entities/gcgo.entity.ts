@@ -1,5 +1,5 @@
 import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { Mission } from '../../mission/entities/mission.entity';
+import { AlumniProfile } from '../../alumni-profile/entities/alumni-profile.entity';
 
 @Entity()
 export class GCGO {
@@ -9,6 +9,6 @@ export class GCGO {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => Mission, (mission) => mission.gcgos)
-  missions: Mission[];
+  @ManyToMany(() => AlumniProfile, (alumnus) => alumnus.gcgos)
+  alumni: AlumniProfile[];
 }

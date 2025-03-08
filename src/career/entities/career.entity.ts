@@ -6,11 +6,6 @@ export class Career {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => AlumniProfile, (alumni) => alumni.careers, {
-    onDelete: 'CASCADE',
-  })
-  alumni: AlumniProfile;
-
   @Column()
   role: string;
 
@@ -25,4 +20,9 @@ export class Career {
 
   @Column()
   location: string;
+
+  @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.experiences, {
+    onDelete: 'CASCADE',
+  })
+  alumnus: AlumniProfile;
 }

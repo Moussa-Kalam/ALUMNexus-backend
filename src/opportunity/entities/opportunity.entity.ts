@@ -2,21 +2,25 @@ import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AlumniProfile } from '../../alumni-profile/entities/alumni-profile.entity';
 
 @Entity()
-export class Project {
+export class Opportunity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   title: string;
 
-  @Column({ type: 'text' })
+  @Column()
   description: string;
 
-  @Column({ nullable: true })
-  link?: string;
+  @Column()
+  location: string;
 
-  @ManyToOne(() => AlumniProfile, (alumni) => alumni.projects, {
-    onDelete: 'CASCADE',
-  })
+  @Column()
+  link: string;
+
+  @Column()
+  deadline: string;
+
+  @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.opportunities)
   alumnus: AlumniProfile;
 }

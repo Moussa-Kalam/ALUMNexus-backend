@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { AlumniProfile } from '../../alumni-profile/entities/alumni-profile.entity';
 
 @Entity()
@@ -9,6 +9,6 @@ export class Skill {
   @Column()
   name: string;
 
-  @ManyToMany(() => AlumniProfile, (alumni) => alumni.skills)
-  alumni: AlumniProfile[];
+  @ManyToOne(() => AlumniProfile, (alumni) => alumni.skills)
+  alumnus: AlumniProfile[];
 }

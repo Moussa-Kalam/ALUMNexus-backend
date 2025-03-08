@@ -5,21 +5,16 @@ import {
   IsUrl,
   ValidateNested,
 } from 'class-validator';
-import { Skill } from '../../skills/entities/skill.entity';
 import { EducationDto } from './education.dto';
 import { CareerDto } from './career.dto';
 import { ProjectDto } from './project.dto';
+import { SkillDto } from './skill';
+import { GcgoDto } from './gcgo';
 
 export class CreateAlumniProfileDto {
   @IsOptional()
   @IsUrl()
   photo: string;
-
-  @IsString()
-  firstName: string;
-
-  @IsString()
-  lastName: string;
 
   @IsString()
   professionalTitle: string;
@@ -33,15 +28,15 @@ export class CreateAlumniProfileDto {
   @IsPhoneNumber()
   phoneNumber: string;
 
-  @IsString()
+  @IsUrl()
   linkedin: string;
 
   @IsOptional()
-  @IsString()
+  @IsUrl()
   website?: string;
 
   @IsOptional()
-  @IsString()
+  @IsUrl()
   github?: string;
 
   @ValidateNested()
@@ -54,8 +49,8 @@ export class CreateAlumniProfileDto {
   projects: ProjectDto[];
 
   @ValidateNested()
-  skills: Skill[];
+  skills: SkillDto[];
 
-  @IsString({ each: true })
-  gcgos: string[];
+  @ValidateNested()
+  gcgos: GcgoDto[];
 }

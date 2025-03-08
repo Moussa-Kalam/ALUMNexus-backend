@@ -1,11 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { GCGO } from '../../gcgo/entities/gcgo.entity';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Mission {
@@ -14,8 +7,4 @@ export class Mission {
 
   @Column({ type: 'text' })
   description: string;
-
-  @ManyToMany(() => GCGO, (gcgo) => gcgo.missions)
-  @JoinTable()
-  gcgos: GCGO[];
 }
