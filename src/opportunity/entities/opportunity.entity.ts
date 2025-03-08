@@ -23,4 +23,6 @@ export class Opportunity {
 
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.opportunities)
   alumnus: AlumniProfile;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

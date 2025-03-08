@@ -19,4 +19,7 @@ export class Education {
     onDelete: 'CASCADE',
   })
   alumnus: AlumniProfile;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

@@ -1,26 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGcgoDto } from './dto/create-gcgo.dto';
 import { UpdateGcgoDto } from './dto/update-gcgo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { GCGO } from './entities/gcgo.entity';
 
 @Injectable()
 export class GcgoService {
-  create(createGcgoDto: CreateGcgoDto) {
-    return 'This action adds a new gcgo';
+  constructor(
+    @InjectRepository(GCGO)
+    private readonly gcgoRepository: Repository<GCGO>,
+  ) {}
+  async create(createGcgoDto: CreateGcgoDto) {
+    try {
+      const gcgo = await this.gcgoRepository.findOne({
+        where: { name: createGcgoDto.name },
+      });
+      if (gcgo) {
+        return gcgo;
+      }
+
+      const newGcgo = this.gcgoRepository.create({ ...createGcgoDto });
+      return await this.gcgoRepository.save(newGcgo);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all gcgo`;
+    try {
+      return this.gcgoRepository.find();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gcgo`;
+  findOne(id: string) {
+    try {
+      const gcgo = this.gcgoRepository.findOneBy({ id });
+      if (!gcgo) {
+        throw new NotFoundException();
+      }
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateGcgoDto: UpdateGcgoDto) {
-    return `This action updates a #${id} gcgo`;
+  async update(id: string, updateGcgoDto: UpdateGcgoDto) {
+    await this.findOne(id);
+    try {
+      return this.gcgoRepository.update(id, updateGcgoDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
+  remove(id: string) {
     return `This action removes a #${id} gcgo`;
   }
 }

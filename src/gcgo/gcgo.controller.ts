@@ -1,7 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { GcgoService } from './gcgo.service';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CreateGcgoDto } from './dto/create-gcgo.dto';
 import { UpdateGcgoDto } from './dto/update-gcgo.dto';
+import { GcgoService } from './gcgo.service';
 
 @Controller('gcgo')
 export class GcgoController {
@@ -19,16 +27,16 @@ export class GcgoController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.gcgoService.findOne(+id);
+    return this.gcgoService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateGcgoDto: UpdateGcgoDto) {
-    return this.gcgoService.update(+id, updateGcgoDto);
+    return this.gcgoService.update(id, updateGcgoDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.gcgoService.remove(+id);
+    return this.gcgoService.remove(id);
   }
 }

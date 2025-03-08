@@ -1,26 +1,67 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEducationDto } from './dto/create-education.dto';
 import { UpdateEducationDto } from './dto/update-education.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Education } from './entities/education.entity';
 
 @Injectable()
 export class EducationService {
-  create(createEducationDto: CreateEducationDto) {
-    return 'This action adds a new education';
+  constructor(
+    @InjectRepository(Education)
+    private readonly educationRepository: Repository<Education>,
+  ) {}
+  async create(createEducationDto: CreateEducationDto) {
+    try {
+      const education = this.educationRepository.create({
+        ...createEducationDto,
+      });
+      await this.educationRepository.save(education);
+      return education;
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all education`;
+    try {
+      return this.educationRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} education`;
+  findOne(id: string) {
+    try {
+      const education = this.educationRepository.findOneBy({ id });
+      if (!education) {
+        throw new NotFoundException();
+      }
+      return education;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateEducationDto: UpdateEducationDto) {
-    return `This action updates a #${id} education`;
+  update(id: string, updateEducationDto: UpdateEducationDto) {
+    this.findOne(id);
+    try {
+      return this.educationRepository.update(id, updateEducationDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} education`;
+  remove(id: string) {
+    this.findOne(id);
+    try {
+      return this.educationRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

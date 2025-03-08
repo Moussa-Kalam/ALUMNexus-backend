@@ -11,4 +11,7 @@ export class Skill {
 
   @ManyToOne(() => AlumniProfile, (alumni) => alumni.skills)
   alumnus: AlumniProfile[];
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

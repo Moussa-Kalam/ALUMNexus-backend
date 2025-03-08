@@ -1,26 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateOpportunityDto } from './dto/create-opportunity.dto';
 import { UpdateOpportunityDto } from './dto/update-opportunity.dto';
+import { Opportunity } from './entities/opportunity.entity';
 
 @Injectable()
 export class OpportunityService {
+  constructor(
+    @InjectRepository(Opportunity)
+    private readonly opportunityRepository: Repository<Opportunity>,
+  ) {}
   create(createOpportunityDto: CreateOpportunityDto) {
-    return 'This action adds a new opportunity';
+    try {
+      const opportunity = this.opportunityRepository.create({
+        ...createOpportunityDto,
+      });
+      return this.opportunityRepository.save(opportunity);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all opportunity`;
+    try {
+      return this.opportunityRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} opportunity`;
+  findOne(id: string) {
+    try {
+      const opportunity = this.opportunityRepository.findOneBy({ id });
+      if (!opportunity) {
+        throw new NotFoundException();
+      }
+      return opportunity;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateOpportunityDto: UpdateOpportunityDto) {
-    return `This action updates a #${id} opportunity`;
+  async update(id: string, updateOpportunityDto: UpdateOpportunityDto) {
+    await this.findOne(id);
+    try {
+      return this.opportunityRepository.update(id, updateOpportunityDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} opportunity`;
+  async remove(id: string) {
+    await this.findOne(id);
+    try {
+      return this.opportunityRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }
