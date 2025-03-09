@@ -4,6 +4,7 @@ import { UpdateGcgoDto } from './dto/update-gcgo.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { GCGO } from './entities/gcgo.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class GcgoService {
@@ -11,51 +12,61 @@ export class GcgoService {
     @InjectRepository(GCGO)
     private readonly gcgoRepository: Repository<GCGO>,
   ) {}
-  async create(createGcgoDto: CreateGcgoDto) {
-    try {
-      const gcgo = await this.gcgoRepository.findOne({
-        where: { name: createGcgoDto.name },
-      });
-      if (gcgo) {
-        return gcgo;
-      }
 
-      const newGcgo = this.gcgoRepository.create({ ...createGcgoDto });
-      return await this.gcgoRepository.save(newGcgo);
-    } catch (error) {
-      throw error;
+  findByName(name: string) {
+    return this.gcgoRepository.findOne({ where: { name } });
+  }
+
+  async findOne(id: string) {
+    const gcgo = await this.gcgoRepository.findOne({
+      where: { id },
+      relations: ['alumni'], // Ensure alumni relations are loaded
+    });
+    if (!gcgo) {
+      throw new NotFoundException(`GCGO with ID ${id} not found`);
     }
+    return gcgo;
+  }
+
+  async create(createGcgoDto: CreateGcgoDto) {
+    const gcgo = this.gcgoRepository.create(createGcgoDto);
+    return await this.gcgoRepository.save(gcgo);
+  }
+
+  async createOrUpdateGcgo(gcgoDto: CreateGcgoDto, alumnus?: AlumniProfile) {
+    let gcgo = await this.findByName(gcgoDto.name);
+
+    if (gcgo) {
+      // Ensure alumni array is initialized
+      gcgo.alumni = gcgo.alumni || [];
+
+      // Check if alumnus is already linked before adding
+      if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
+        gcgo.alumni = [...gcgo.alumni, alumnus];
+      }
+    } else {
+      gcgo = this.gcgoRepository.create({
+        ...gcgoDto,
+        alumni: alumnus ? [alumnus] : [],
+      });
+    }
+    return await this.gcgoRepository.save(gcgo);
   }
 
   findAll() {
-    try {
-      return this.gcgoRepository.find();
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  findOne(id: string) {
-    try {
-      const gcgo = this.gcgoRepository.findOneBy({ id });
-      if (!gcgo) {
-        throw new NotFoundException();
-      }
-    } catch (error) {
-      throw error;
-    }
+    return this.gcgoRepository.find({ relations: ['alumni'] });
   }
 
   async update(id: string, updateGcgoDto: UpdateGcgoDto) {
     await this.findOne(id);
-    try {
-      return this.gcgoRepository.update(id, updateGcgoDto);
-    } catch (error) {
-      throw error;
-    }
+    await this.gcgoRepository.update(id, updateGcgoDto);
+    return this.findOne(id);
   }
 
-  remove(id: string) {
-    return `This action removes a #${id} gcgo`;
+  async remove(id: string) {
+    const gcgo = await this.findOne(id);
+    await this.gcgoRepository.remove(gcgo);
+
+    return { message: `GCGO with ID ${id} deleted successfully` };
   }
 }

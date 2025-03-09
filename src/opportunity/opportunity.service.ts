@@ -11,6 +11,7 @@ export class OpportunityService {
     @InjectRepository(Opportunity)
     private readonly opportunityRepository: Repository<Opportunity>,
   ) {}
+
   create(createOpportunityDto: CreateOpportunityDto) {
     try {
       const opportunity = this.opportunityRepository.create({

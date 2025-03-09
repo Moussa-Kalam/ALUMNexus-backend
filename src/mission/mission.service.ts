@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateMissionDto } from './dto/create-mission.dto';
 import { UpdateMissionDto } from './dto/update-mission.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Mission } from './entities/mission.entity';
 import { Repository } from 'typeorm';
+import { CreateMissionDto } from './dto/create-mission.dto';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class MissionService {
@@ -11,9 +12,17 @@ export class MissionService {
     @InjectRepository(Mission)
     private readonly missionRepository: Repository<Mission>,
   ) {}
-  async create(createMissionDto: CreateMissionDto) {
+
+  async createAlumnusMission(
+    createMissionDto: CreateMissionDto,
+    alumnus?: AlumniProfile,
+  ) {
     try {
-      const newMission = this.missionRepository.create(createMissionDto);
+      const newMission = this.missionRepository.create({
+        ...createMissionDto,
+        alumnus,
+      });
+
       return await this.missionRepository.save(newMission);
     } catch (error) {
       throw error;

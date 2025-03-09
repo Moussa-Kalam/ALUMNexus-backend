@@ -9,8 +9,10 @@ export class Skill {
   @Column()
   name: string;
 
-  @ManyToOne(() => AlumniProfile, (alumni) => alumni.skills)
-  alumnus: AlumniProfile[];
+  @ManyToOne(() => AlumniProfile, (alumni) => alumni.skills, {
+    onDelete: 'CASCADE',
+  })
+  alumnus: AlumniProfile;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

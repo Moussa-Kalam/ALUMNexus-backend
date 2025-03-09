@@ -6,6 +6,8 @@ import { Repository } from 'typeorm';
 import { Project } from './entities/project.entity';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
+
 @Auth(AuthType.None)
 @Injectable()
 export class ProjectService {
@@ -13,10 +15,12 @@ export class ProjectService {
     @InjectRepository(Project)
     public readonly projectRepository: Repository<Project>,
   ) {}
-  async create(createProjectDto: CreateProjectDto) {
+
+  async create(createProjectDto: CreateProjectDto, alumnus?: AlumniProfile) {
     try {
       const project = this.projectRepository.create({
         ...createProjectDto,
+        alumnus,
       });
       return await this.projectRepository.save(project);
     } catch (error) {

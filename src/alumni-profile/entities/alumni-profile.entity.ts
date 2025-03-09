@@ -2,6 +2,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   OneToMany,
   OneToOne,
@@ -49,7 +50,6 @@ export class AlumniProfile {
   website?: string;
 
   @OneToOne(() => Mission, { cascade: true, eager: true })
-  @JoinColumn()
   mission: Mission;
 
   @OneToMany(() => Education, (education) => education.alumnus)
@@ -68,10 +68,11 @@ export class AlumniProfile {
   opportunities: Opportunity[];
 
   @ManyToMany(() => GCGO, (gcgo) => gcgo.alumni)
-  @JoinColumn()
+  @JoinTable()
   gcgos: GCGO[];
 
   @OneToOne(() => User, (user) => user.alumniProfile, { onDelete: 'CASCADE' })
+  @JoinColumn()
   user: User;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })

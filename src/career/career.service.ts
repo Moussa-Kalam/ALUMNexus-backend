@@ -4,6 +4,7 @@ import { UpdateCareerDto } from './dto/update-career.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Career } from './entities/career.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class CareerService {
@@ -11,9 +12,13 @@ export class CareerService {
     @InjectRepository(Career)
     private readonly careerRepository: Repository<Career>,
   ) {}
-  async create(createCareerDto: CreateCareerDto) {
+
+  async create(createCareerDto: CreateCareerDto, alumnus?: AlumniProfile) {
     try {
-      const career = this.careerRepository.create({ ...createCareerDto });
+      const career = this.careerRepository.create({
+        ...createCareerDto,
+        alumnus,
+      });
       return await this.careerRepository.save(career);
     } catch (error) {
       console.log(error);

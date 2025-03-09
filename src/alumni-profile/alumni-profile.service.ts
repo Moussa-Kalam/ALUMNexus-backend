@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { CreateAlumniProfileDto } from './dto/create-alumni-profile.dto';
 import { UpdateAlumniProfileDto } from './dto/update-alumni-profile.dto';
 import { Repository } from 'typeorm';
@@ -35,32 +39,60 @@ export class AlumniProfileService {
     createAlumniProfileDto: CreateAlumniProfileDto,
     activeUser: ActiveUserData,
   ) {
+    const currentUser = await this.userService.findUserById(activeUser.sub);
+
+    if (!currentUser) throw new UnauthorizedException('Please log in first!');
+
     try {
       const { mission, education, career, projects, skills, gcgos, ...alumni } =
         createAlumniProfileDto;
 
-      await this.missionService.create(mission);
-
-      await Promise.all(
-        education.map((edu) => this.educationService.create(edu)),
-      );
-
-      await Promise.all(career.map((car) => this.careerService.create(car)));
-
-      await Promise.all(
-        projects.map((proj) => this.projectService.create(proj)),
-      );
-
-      await Promise.all(skills.map((skill) => this.skillService.create(skill)));
-      await Promise.all(gcgos.map((gcgo) => this.gcgoService.create(gcgo)));
-
-      const currentUser = await this.userService.findUserById(activeUser.sub);
-
-      return await this.alumniRepository.save({
+      const newAlumnusProfile = this.alumniRepository.create({
+        ...alumni,
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
-        ...alumni,
+        user: currentUser,
       });
+
+      const savedAlumnusProfile =
+        await this.alumniRepository.save(newAlumnusProfile);
+
+      await this.missionService.createAlumnusMission(
+        mission,
+        savedAlumnusProfile,
+      );
+
+      await Promise.all(
+        education.map((edu) =>
+          this.educationService.create(edu, savedAlumnusProfile),
+        ),
+      );
+
+      await Promise.all(
+        career.map((car) =>
+          this.careerService.create(car, savedAlumnusProfile),
+        ),
+      );
+
+      await Promise.all(
+        projects.map((proj) =>
+          this.projectService.create(proj, savedAlumnusProfile),
+        ),
+      );
+
+      await Promise.all(
+        skills.map((skill) =>
+          this.skillService.create(skill, savedAlumnusProfile),
+        ),
+      );
+
+      await Promise.all(
+        gcgos.map(async (gcgo) => {
+          await this.gcgoService.createOrUpdateGcgo(gcgo, savedAlumnusProfile);
+        }),
+      );
+
+      return savedAlumnusProfile;
     } catch (error) {
       throw error;
     }

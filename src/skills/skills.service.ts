@@ -4,6 +4,7 @@ import { UpdateSkillDto } from './dto/update-skill.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Skill } from './entities/skill.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class SkillsService {
@@ -11,10 +12,12 @@ export class SkillsService {
     @InjectRepository(Skill)
     private readonly skillRepository: Repository<Skill>,
   ) {}
-  async create(createSkillDto: CreateSkillDto) {
+
+  async create(createSkillDto: CreateSkillDto, alumnus?: AlumniProfile) {
     try {
       const newSkill = this.skillRepository.create({
         ...createSkillDto,
+        alumnus,
       });
       await this.skillRepository.save(newSkill);
     } catch (error) {
@@ -23,6 +26,7 @@ export class SkillsService {
   }
 
   /*************  ✨ Codeium Command ⭐  *************/
+
   /**
    * Find all skills in the database and return them sorted by creation date descending.
    * @returns {Promise<Skill[]>} A promise of an array of Skill objects.

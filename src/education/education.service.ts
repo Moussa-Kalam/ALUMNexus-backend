@@ -4,6 +4,7 @@ import { UpdateEducationDto } from './dto/update-education.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Education } from './entities/education.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class EducationService {
@@ -11,10 +12,15 @@ export class EducationService {
     @InjectRepository(Education)
     private readonly educationRepository: Repository<Education>,
   ) {}
-  async create(createEducationDto: CreateEducationDto) {
+
+  async create(
+    createEducationDto: CreateEducationDto,
+    alumnus?: AlumniProfile,
+  ) {
     try {
       const education = this.educationRepository.create({
         ...createEducationDto,
+        alumnus,
       });
       await this.educationRepository.save(education);
       return education;
