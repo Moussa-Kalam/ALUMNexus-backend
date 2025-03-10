@@ -71,7 +71,10 @@ export class AlumniProfile {
   @JoinTable()
   gcgos: GCGO[];
 
-  @OneToOne(() => User, (user) => user.alumniProfile, { onDelete: 'CASCADE' })
+  @OneToOne(() => User, (user) => user.alumniProfile, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   @JoinColumn()
   user: User;
 

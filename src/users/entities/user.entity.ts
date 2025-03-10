@@ -26,7 +26,10 @@ export class User {
   })
   accountType: UserRoles;
 
-  @OneToOne(() => AlumniProfile, (profile) => profile.user, { cascade: true })
+  @OneToOne(() => AlumniProfile, (alumniProfile) => alumniProfile.user, {
+    cascade: true,
+    nullable: true,
+  })
   alumniProfile: AlumniProfile;
 
   @Column({ default: false })

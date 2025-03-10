@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -19,6 +20,7 @@ import { ProjectService } from 'src/project/project.service';
 import { SkillsService } from 'src/skills/skills.service';
 import { UsersService } from 'src/users/users.service';
 import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
+import { pgUniqueViolationErrorCode } from '../common/constants';
 
 @Injectable()
 export class AlumniProfileService {
@@ -51,12 +53,13 @@ export class AlumniProfileService {
         ...alumni,
         firstName: currentUser.firstName,
         lastName: currentUser.lastName,
-        user: currentUser,
+        user: currentUser, // Associate the profile with the current user
       });
 
       const savedAlumnusProfile =
         await this.alumniRepository.save(newAlumnusProfile);
 
+      // Create related entities
       await this.missionService.createAlumnusMission(
         mission,
         savedAlumnusProfile,
@@ -94,33 +97,31 @@ export class AlumniProfileService {
 
       return savedAlumnusProfile;
     } catch (error) {
+      if (error.code === pgUniqueViolationErrorCode) {
+        throw new ConflictException('You already have an alumni profile.');
+      }
       throw error;
     }
   }
 
-  findAll(paginationQuery: PaginationQueryDto) {
+  async findAll(paginationQuery: PaginationQueryDto) {
     const { limit, offset } = paginationQuery;
     try {
-      const alumni = this.alumniRepository.find({
+      const alumni = await this.alumniRepository.find({
         order: {
           createdAt: 'DESC',
         },
-        relations: [
-          'mission',
-          'education',
-          'experiences',
-          'projects',
-          'skills',
-        ],
         skip: offset,
         take: limit,
       });
+
       if (!alumni) {
-        throw new NotFoundException();
+        throw new NotFoundException('No alumni profiles found!');
       }
       return alumni;
     } catch (error) {
-      throw error;
+      console.error('Error fetching alumni profiles: ', error);
+      throw new Error(`Failed to fetch alumni profiles: ${error.message}`);
     }
   }
 
