@@ -14,11 +14,14 @@ import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { AlumniProfileService } from './alumni-profile.service';
 import { CreateAlumniProfileDto } from './dto/create-alumni-profile.dto';
 import { UpdateAlumniProfileDto } from './dto/update-alumni-profile.dto';
+import { Roles } from '../iam/authorization/decorators/roles.decorator';
+import { UserRoles } from '../common/enums/roles.enum';
 
 @Controller('alumni-profile')
 export class AlumniProfileController {
   constructor(private readonly alumniProfileService: AlumniProfileService) {}
 
+  @Roles(UserRoles.ALUMNUS, UserRoles.FACULTY)
   @Post()
   create(
     @Body() createAlumniProfileDto: CreateAlumniProfileDto,

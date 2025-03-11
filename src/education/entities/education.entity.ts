@@ -16,7 +16,7 @@ export class Education {
   graduationYear: number;
 
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.education, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   alumnus: AlumniProfile;
 

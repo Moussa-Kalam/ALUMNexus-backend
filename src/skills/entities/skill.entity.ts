@@ -10,7 +10,7 @@ export class Skill {
   name: string;
 
   @ManyToOne(() => AlumniProfile, (alumni) => alumni.skills, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   alumnus: AlumniProfile;
 

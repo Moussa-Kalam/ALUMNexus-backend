@@ -17,7 +17,7 @@ export class MissionController {
 
   @Post()
   create(@Body() createMissionDto: CreateMissionDto) {
-    return this.missionService.createAlumnusMission(createMissionDto);
+    return this.missionService.create(createMissionDto);
   }
 
   @Get()

@@ -9,6 +9,8 @@ export class GCGO {
   @Column({ unique: true })
   name: string;
 
-  @ManyToMany(() => AlumniProfile, (alumnus) => alumnus.gcgos)
+  @ManyToMany(() => AlumniProfile, (alumnus) => alumnus.gcgos, {
+    cascade: true,
+  })
   alumni: AlumniProfile[];
 }

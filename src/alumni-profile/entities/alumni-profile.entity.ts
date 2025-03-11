@@ -8,7 +8,6 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
 import { Mission } from '../../mission/entities/mission.entity';
 import { Education } from '../../education/entities/education.entity';
 import { Career } from '../../career/entities/career.entity';
@@ -16,6 +15,7 @@ import { Project } from '../../project/entities/project.entity';
 import { Skill } from '../../skills/entities/skill.entity';
 import { Opportunity } from '../../opportunity/entities/opportunity.entity';
 import { GCGO } from '../../gcgo/entities/gcgo.entity';
+import { User } from '../../users/entities/user.entity';
 
 @Entity()
 export class AlumniProfile {
@@ -27,6 +27,9 @@ export class AlumniProfile {
 
   @Column()
   lastName: string;
+
+  @Column()
+  country: string;
 
   @Column({ nullable: true })
   photo?: string;
@@ -47,9 +50,9 @@ export class AlumniProfile {
   github?: string;
 
   @Column({ nullable: true })
-  website?: string;
+  portfolio?: string;
 
-  @OneToOne(() => Mission, { cascade: true, eager: true })
+  @OneToOne(() => Mission, (mission) => mission.alumnus)
   mission: Mission;
 
   @OneToMany(() => Education, (education) => education.alumnus)
@@ -72,7 +75,6 @@ export class AlumniProfile {
   gcgos: GCGO[];
 
   @OneToOne(() => User, (user) => user.alumniProfile, {
-    onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn()

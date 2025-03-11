@@ -16,7 +16,19 @@ export class ProjectService {
     public readonly projectRepository: Repository<Project>,
   ) {}
 
-  async create(createProjectDto: CreateProjectDto, alumnus?: AlumniProfile) {
+  create(createProjectDto: CreateProjectDto) {
+    try {
+      const project = this.projectRepository.create(createProjectDto);
+      return this.projectRepository.save(project);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAlumnusProject(
+    createProjectDto: CreateProjectDto,
+    alumnus: AlumniProfile,
+  ) {
     try {
       const project = this.projectRepository.create({
         ...createProjectDto,

@@ -33,7 +33,7 @@ export class GcgoService {
     return await this.gcgoRepository.save(gcgo);
   }
 
-  async createOrUpdateGcgo(gcgoDto: CreateGcgoDto, alumnus?: AlumniProfile) {
+  async createOrUpdateGcgo(gcgoDto: CreateGcgoDto, alumnus: AlumniProfile) {
     let gcgo = await this.findByName(gcgoDto.name);
 
     if (gcgo) {

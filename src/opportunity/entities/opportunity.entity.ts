@@ -16,12 +16,17 @@ export class Opportunity {
   location: string;
 
   @Column()
+  category: string;
+
+  @Column()
   link: string;
 
   @Column()
   deadline: string;
 
-  @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.opportunities)
+  @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.opportunities, {
+    cascade: true,
+  })
   alumnus: AlumniProfile;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

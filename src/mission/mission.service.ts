@@ -13,9 +13,18 @@ export class MissionService {
     private readonly missionRepository: Repository<Mission>,
   ) {}
 
+  create(createMissionDto: CreateMissionDto) {
+    try {
+      const newMission = this.missionRepository.create(createMissionDto);
+      return this.missionRepository.save(newMission);
+    } catch (error) {
+      throw error;
+    }
+  }
+
   async createAlumnusMission(
     createMissionDto: CreateMissionDto,
-    alumnus?: AlumniProfile,
+    alumnus: AlumniProfile,
   ) {
     try {
       const newMission = this.missionRepository.create({

@@ -13,9 +13,21 @@ export class EducationService {
     private readonly educationRepository: Repository<Education>,
   ) {}
 
-  async create(
+  async create(createEducationDto: CreateEducationDto) {
+    try {
+      const education = this.educationRepository.create({
+        ...createEducationDto,
+      });
+      await this.educationRepository.save(education);
+      return education;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAlumnusEducation(
     createEducationDto: CreateEducationDto,
-    alumnus?: AlumniProfile,
+    alumnus: AlumniProfile,
   ) {
     try {
       const education = this.educationRepository.create({

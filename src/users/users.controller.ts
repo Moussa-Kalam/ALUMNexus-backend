@@ -1,21 +1,18 @@
-import { Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { ActiveUser } from '../iam/decorators/active-user-decorator';
-import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
+import { Controller, Delete, Get, Param } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
+  // @Post()
   // create(@Body() createUserDto: CreateUserDto) {
   //   return this.usersService.create(createUserDto);
   // }
 
   // This is an example on how to get the email of the logged-in user
   @Get()
-  findAll(@ActiveUser('email') email: ActiveUserData['email']) {
-    console.log(email);
+  findAll() {
     return this.usersService.findAll();
   }
 

@@ -23,6 +23,9 @@ export class CreateAlumniProfileDto {
   @IsString()
   bio: string;
 
+  @IsString()
+  country: string;
+
   @ValidateNested()
   mission: MissionDto;
 
@@ -34,7 +37,7 @@ export class CreateAlumniProfileDto {
 
   @IsOptional()
   @IsUrl()
-  website?: string;
+  portfolio?: string;
 
   @IsOptional()
   @IsUrl()

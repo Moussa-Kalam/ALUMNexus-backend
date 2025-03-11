@@ -18,7 +18,9 @@ export class Mission {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @OneToOne(() => AlumniProfile, (alumniProfile) => alumniProfile.mission)
+  @OneToOne(() => AlumniProfile, (alumniProfile) => alumniProfile.mission, {
+    cascade: true,
+  })
   @JoinColumn()
   alumnus: AlumniProfile;
 }

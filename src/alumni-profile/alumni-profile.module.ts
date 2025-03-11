@@ -24,5 +24,6 @@ import { UsersModule } from 'src/users/users.module';
   ],
   controllers: [AlumniProfileController],
   providers: [AlumniProfileService],
+  exports: [AlumniProfileService],
 })
 export class AlumniProfileModule {}

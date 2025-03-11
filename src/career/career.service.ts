@@ -13,7 +13,21 @@ export class CareerService {
     private readonly careerRepository: Repository<Career>,
   ) {}
 
-  async create(createCareerDto: CreateCareerDto, alumnus?: AlumniProfile) {
+  async create(createCareerDto: CreateCareerDto) {
+    try {
+      const career = this.careerRepository.create({
+        ...createCareerDto,
+      });
+      return await this.careerRepository.save(career);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createExperience(
+    createCareerDto: CreateCareerDto,
+    alumnus: AlumniProfile,
+  ) {
     try {
       const career = this.careerRepository.create({
         ...createCareerDto,

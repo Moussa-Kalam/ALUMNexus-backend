@@ -22,7 +22,7 @@ export class Career {
   location: string;
 
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.experiences, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   alumnus: AlumniProfile;
 
