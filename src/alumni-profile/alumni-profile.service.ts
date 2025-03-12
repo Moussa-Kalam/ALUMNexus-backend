@@ -93,7 +93,7 @@ export class AlumniProfileService {
 
       await Promise.all(
         gcgos.map(async (gcgo) => {
-          await this.gcgoService.createOrUpdateGcgo(gcgo, savedAlumnusProfile);
+          await this.gcgoService.linkAlumnusToGcgo(gcgo, savedAlumnusProfile);
         }),
       );
 

@@ -33,14 +33,20 @@ export class GcgoService {
     return await this.gcgoRepository.save(gcgo);
   }
 
-  async createOrUpdateGcgo(gcgoDto: CreateGcgoDto, alumnus: AlumniProfile) {
+  async linkAlumnusToGcgo(gcgoDto: CreateGcgoDto, alumnus: AlumniProfile) {
     let gcgo = await this.findByName(gcgoDto.name);
 
     if (gcgo) {
       // Ensure alumni array is initialized
-      gcgo.alumni = gcgo.alumni || [];
+      // gcgo.alumni = gcgo.alumni || [];
 
-      // Check if alumnus is already linked before adding
+      // Load alumni relation to avoid overwriting
+      gcgo = await this.gcgoRepository.findOne({
+        where: { id: gcgo.id },
+        relations: ['alumni'],
+      });
+
+      // Merge existing alumnii with the new alumnus
       if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
         gcgo.alumni = [...gcgo.alumni, alumnus];
       }
@@ -50,7 +56,22 @@ export class GcgoService {
         alumni: alumnus ? [alumnus] : [],
       });
     }
+
     return await this.gcgoRepository.save(gcgo);
+
+    // Check if alumnus is already linked before adding
+    //   if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
+    //     gcgo.alumni.push(alumnus);
+    //     await this.gcgoRepository.save(gcgo);
+    //   }
+    // } else {
+    //   gcgo = this.gcgoRepository.create({
+    //     ...gcgoDto,
+    //     alumni: alumnus ? [alumnus] : [],
+    //   });
+    //   await this.gcgoRepository.save(gcgo);
+    // }
+    // return gcgo;
   }
 
   findAll() {

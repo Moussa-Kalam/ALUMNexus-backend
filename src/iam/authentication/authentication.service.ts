@@ -44,6 +44,7 @@ export class AuthenticationService {
       user.accountType = signUpDto.accountType;
 
       await this.userRepository.save(user);
+      return { message: 'User created successfully!' };
     } catch (error) {
       if (error.code === pgUniqueViolationErrorCode) {
         throw new ConflictException('User with this email already exists!');
