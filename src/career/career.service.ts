@@ -1,26 +1,83 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCareerDto } from './dto/create-career.dto';
 import { UpdateCareerDto } from './dto/update-career.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Career } from './entities/career.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class CareerService {
-  create(createCareerDto: CreateCareerDto) {
-    return 'This action adds a new career';
+  constructor(
+    @InjectRepository(Career)
+    private readonly careerRepository: Repository<Career>,
+  ) {}
+
+  async create(createCareerDto: CreateCareerDto) {
+    try {
+      const career = this.careerRepository.create({
+        ...createCareerDto,
+      });
+      return await this.careerRepository.save(career);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createExperience(
+    createCareerDto: CreateCareerDto,
+    alumnus: AlumniProfile,
+  ) {
+    try {
+      const career = this.careerRepository.create({
+        ...createCareerDto,
+        alumnus,
+      });
+      return await this.careerRepository.save(career);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   findAll() {
-    return `This action returns all career`;
+    try {
+      return this.careerRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} career`;
+  findOne(id: string) {
+    try {
+      const career = this.careerRepository.findOneBy({ id });
+      if (!career) {
+        throw new NotFoundException();
+      }
+      return career;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateCareerDto: UpdateCareerDto) {
-    return `This action updates a #${id} career`;
+  update(id: string, updateCareerDto: UpdateCareerDto) {
+    this.findOne(id);
+    try {
+      return this.careerRepository.update(id, updateCareerDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} career`;
+  remove(id: string) {
+    this.findOne(id);
+    try {
+      return this.careerRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

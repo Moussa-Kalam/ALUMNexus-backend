@@ -22,7 +22,10 @@ export class Career {
   location: string;
 
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.experiences, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   alumnus: AlumniProfile;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

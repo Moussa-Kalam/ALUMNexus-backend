@@ -1,26 +1,83 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateSkillDto } from './dto/create-skill.dto';
 import { UpdateSkillDto } from './dto/update-skill.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Skill } from './entities/skill.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class SkillsService {
+  constructor(
+    @InjectRepository(Skill)
+    private readonly skillRepository: Repository<Skill>,
+  ) {}
+
   create(createSkillDto: CreateSkillDto) {
-    return 'This action adds a new skill';
+    try {
+      const skill = this.skillRepository.create({
+        ...createSkillDto,
+      });
+      return this.skillRepository.save(skill);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async createAlumnusSkill(
+    createSkillDto: CreateSkillDto,
+    alumnus: AlumniProfile,
+  ) {
+    try {
+      const newSkill = this.skillRepository.create({
+        ...createSkillDto,
+        alumnus,
+      });
+      await this.skillRepository.save(newSkill);
+    } catch (error) {
+      throw error;
+    }
   }
 
   findAll() {
-    return `This action returns all skills`;
+    try {
+      return this.skillRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} skill`;
+  findOne(id: string) {
+    try {
+      const skill = this.skillRepository.findOneBy({ id });
+      if (!skill) {
+        throw new NotFoundException();
+      }
+      return skill;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
+  update(id: string, updateSkillDto: UpdateSkillDto) {
+    this.findOne(id);
+    try {
+      return this.skillRepository.update(id, updateSkillDto);
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
+  remove(id: string) {
+    this.findOne(id);
+    try {
+      return this.skillRepository.delete(id);
+    } catch (error) {
+      throw error;
+    }
   }
 }

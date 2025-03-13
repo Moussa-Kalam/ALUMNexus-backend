@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { UserRoles } from '../../common/enums/roles.enum';
 import { AlumniProfile } from '../../alumni-profile/entities/alumni-profile.entity';
 
@@ -32,9 +26,11 @@ export class User {
   })
   accountType: UserRoles;
 
-  @OneToOne(() => AlumniProfile, (profile) => profile.user, { nullable: true })
-  @JoinColumn()
-  alumniProfile?: AlumniProfile;
+  @OneToOne(() => AlumniProfile, (alumniProfile) => alumniProfile.user, {
+    cascade: true,
+    nullable: true,
+  })
+  alumniProfile: AlumniProfile;
 
   @Column({ default: false })
   isTfaEnabled: boolean;

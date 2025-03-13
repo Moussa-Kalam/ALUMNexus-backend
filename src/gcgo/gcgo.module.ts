@@ -8,5 +8,6 @@ import { GCGO } from './entities/gcgo.entity';
   imports: [TypeOrmModule.forFeature([GCGO])],
   controllers: [GcgoController],
   providers: [GcgoService],
+  exports: [GcgoService],
 })
 export class GcgoModule {}

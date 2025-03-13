@@ -1,26 +1,93 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateGcgoDto } from './dto/create-gcgo.dto';
 import { UpdateGcgoDto } from './dto/update-gcgo.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { GCGO } from './entities/gcgo.entity';
+import { AlumniProfile } from '../alumni-profile/entities/alumni-profile.entity';
 
 @Injectable()
 export class GcgoService {
-  create(createGcgoDto: CreateGcgoDto) {
-    return 'This action adds a new gcgo';
+  constructor(
+    @InjectRepository(GCGO)
+    private readonly gcgoRepository: Repository<GCGO>,
+  ) {}
+
+  findByName(name: string) {
+    return this.gcgoRepository.findOne({ where: { name } });
+  }
+
+  async findOne(id: string) {
+    const gcgo = await this.gcgoRepository.findOne({
+      where: { id },
+      relations: ['alumni'], // Ensure alumni relations are loaded
+    });
+    if (!gcgo) {
+      throw new NotFoundException(`GCGO with ID ${id} not found`);
+    }
+    return gcgo;
+  }
+
+  async create(createGcgoDto: CreateGcgoDto) {
+    const gcgo = this.gcgoRepository.create(createGcgoDto);
+    return await this.gcgoRepository.save(gcgo);
+  }
+
+  async linkAlumnusToGcgo(gcgoDto: CreateGcgoDto, alumnus: AlumniProfile) {
+    let gcgo = await this.findByName(gcgoDto.name);
+
+    if (gcgo) {
+      // Ensure alumni array is initialized
+      // gcgo.alumni = gcgo.alumni || [];
+
+      // Load alumni relation to avoid overwriting
+      gcgo = await this.gcgoRepository.findOne({
+        where: { id: gcgo.id },
+        relations: ['alumni'],
+      });
+
+      // Merge existing alumnii with the new alumnus
+      if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
+        gcgo.alumni = [...gcgo.alumni, alumnus];
+      }
+    } else {
+      gcgo = this.gcgoRepository.create({
+        ...gcgoDto,
+        alumni: alumnus ? [alumnus] : [],
+      });
+    }
+
+    return await this.gcgoRepository.save(gcgo);
+
+    // Check if alumnus is already linked before adding
+    //   if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
+    //     gcgo.alumni.push(alumnus);
+    //     await this.gcgoRepository.save(gcgo);
+    //   }
+    // } else {
+    //   gcgo = this.gcgoRepository.create({
+    //     ...gcgoDto,
+    //     alumni: alumnus ? [alumnus] : [],
+    //   });
+    //   await this.gcgoRepository.save(gcgo);
+    // }
+    // return gcgo;
   }
 
   findAll() {
-    return `This action returns all gcgo`;
+    return this.gcgoRepository.find({ relations: ['alumni'] });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} gcgo`;
+  async update(id: string, updateGcgoDto: UpdateGcgoDto) {
+    await this.findOne(id);
+    await this.gcgoRepository.update(id, updateGcgoDto);
+    return this.findOne(id);
   }
 
-  update(id: number, updateGcgoDto: UpdateGcgoDto) {
-    return `This action updates a #${id} gcgo`;
-  }
+  async remove(id: string) {
+    const gcgo = await this.findOne(id);
+    await this.gcgoRepository.remove(gcgo);
 
-  remove(id: number) {
-    return `This action removes a #${id} gcgo`;
+    return { message: `GCGO with ID ${id} deleted successfully` };
   }
 }

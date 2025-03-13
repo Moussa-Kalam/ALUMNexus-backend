@@ -10,6 +10,7 @@ import { CareerDto } from './career.dto';
 import { ProjectDto } from './project.dto';
 import { SkillDto } from './skill';
 import { GcgoDto } from './gcgo';
+import { MissionDto } from './mission.dto';
 
 export class CreateAlumniProfileDto {
   @IsOptional()
@@ -23,7 +24,10 @@ export class CreateAlumniProfileDto {
   bio: string;
 
   @IsString()
-  mission: string;
+  country: string;
+
+  @ValidateNested()
+  mission: MissionDto;
 
   @IsPhoneNumber()
   phoneNumber: string;
@@ -33,7 +37,7 @@ export class CreateAlumniProfileDto {
 
   @IsOptional()
   @IsUrl()
-  website?: string;
+  portfolio?: string;
 
   @IsOptional()
   @IsUrl()

@@ -1,6 +1,6 @@
 import { IsString } from 'class-validator';
 
-export class CreateSkillDto {
+export class MissionDto {
   @IsString()
-  name: string;
+  description: string;
 }

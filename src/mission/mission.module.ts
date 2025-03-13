@@ -8,5 +8,6 @@ import { Mission } from './entities/mission.entity';
   imports: [TypeOrmModule.forFeature([Mission])],
   controllers: [MissionController],
   providers: [MissionService],
+  exports: [MissionService],
 })
 export class MissionModule {}

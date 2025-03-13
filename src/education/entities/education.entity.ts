@@ -16,7 +16,10 @@ export class Education {
   graduationYear: number;
 
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.education, {
-    onDelete: 'CASCADE',
+    cascade: true,
   })
   alumnus: AlumniProfile;
+
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
 }

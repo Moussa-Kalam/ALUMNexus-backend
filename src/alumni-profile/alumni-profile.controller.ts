@@ -8,18 +8,26 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ActiveUser } from 'src/iam/decorators/active-user-decorator';
+import { ActiveUserData } from 'src/iam/interfaces/active-user-data.interface';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 import { AlumniProfileService } from './alumni-profile.service';
 import { CreateAlumniProfileDto } from './dto/create-alumni-profile.dto';
 import { UpdateAlumniProfileDto } from './dto/update-alumni-profile.dto';
-import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
+import { Roles } from '../iam/authorization/decorators/roles.decorator';
+import { UserRoles } from '../common/enums/roles.enum';
 
 @Controller('alumni-profile')
 export class AlumniProfileController {
   constructor(private readonly alumniProfileService: AlumniProfileService) {}
 
+  @Roles(UserRoles.ALUMNUS, UserRoles.FACULTY)
   @Post()
-  create(@Body() createAlumniProfileDto: CreateAlumniProfileDto) {
-    return this.alumniProfileService.create(createAlumniProfileDto);
+  create(
+    @Body() createAlumniProfileDto: CreateAlumniProfileDto,
+    @ActiveUser() activeUser: ActiveUserData,
+  ) {
+    return this.alumniProfileService.create(createAlumniProfileDto, activeUser);
   }
 
   @Get()
@@ -37,11 +45,11 @@ export class AlumniProfileController {
     @Param('id') id: string,
     @Body() updateAlumniProfileDto: UpdateAlumniProfileDto,
   ) {
-    return this.alumniProfileService.update(+id, updateAlumniProfileDto);
+    return this.alumniProfileService.update(id, updateAlumniProfileDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.alumniProfileService.remove(+id);
+    return this.alumniProfileService.remove(id);
   }
 }

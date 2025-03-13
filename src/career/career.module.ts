@@ -8,5 +8,6 @@ import { Career } from './entities/career.entity';
   imports: [TypeOrmModule.forFeature([Career])],
   controllers: [CareerController],
   providers: [CareerService],
+  exports: [CareerService],
 })
 export class CareerModule {}
