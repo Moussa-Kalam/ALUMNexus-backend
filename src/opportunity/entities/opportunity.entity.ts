@@ -19,6 +19,9 @@ export class Opportunity {
   category: string;
 
   @Column()
+  company: string;
+
+  @Column()
   link: string;
 
   @Column()

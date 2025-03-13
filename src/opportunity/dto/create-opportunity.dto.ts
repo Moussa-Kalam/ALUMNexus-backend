@@ -3,9 +3,12 @@ import { IsString, IsUrl } from 'class-validator';
 export class CreateOpportunityDto {
   @IsString()
   title: string;
-  
+
   @IsString()
   description: string;
+
+  @IsString()
+  company: string;
 
   @IsString()
   category: string;
