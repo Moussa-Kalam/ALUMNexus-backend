@@ -24,7 +24,7 @@ export class OpportunityService {
       const alumnus = await this.alumniProfileService.findOneByUserId(
         activeUser.sub,
       );
-    
+
       // Create a new opportunity and connect that alumnus with the opportunity
       const opportunity = this.opportunityRepository.create({
         ...createOpportunityDto,
@@ -56,6 +56,20 @@ export class OpportunityService {
         throw new NotFoundException();
       }
       return opportunity;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  findRecent() {
+    try {
+      return this.opportunityRepository.find({
+        order: {
+          createdAt: 'DESC',
+        },
+        take: 3,
+        relations: ['alumnus'],
+      });
     } catch (error) {
       throw error;
     }

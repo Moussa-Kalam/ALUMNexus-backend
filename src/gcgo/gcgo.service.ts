@@ -58,20 +58,6 @@ export class GcgoService {
     }
 
     return await this.gcgoRepository.save(gcgo);
-
-    // Check if alumnus is already linked before adding
-    //   if (alumnus && !gcgo.alumni.some((a) => a.id === alumnus.id)) {
-    //     gcgo.alumni.push(alumnus);
-    //     await this.gcgoRepository.save(gcgo);
-    //   }
-    // } else {
-    //   gcgo = this.gcgoRepository.create({
-    //     ...gcgoDto,
-    //     alumni: alumnus ? [alumnus] : [],
-    //   });
-    //   await this.gcgoRepository.save(gcgo);
-    // }
-    // return gcgo;
   }
 
   findAll() {

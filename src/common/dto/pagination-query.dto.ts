@@ -1,11 +1,23 @@
-import { IsOptional, IsPositive } from 'class-validator';
+import { IsOptional, IsPositive, IsString } from 'class-validator';
 
 export class PaginationQueryDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsString()
+  country?: string;
+
+  @IsOptional()
+  @IsString()
+  gcgo?: string;
+
   @IsOptional()
   @IsPositive()
   limit: number;
 
   @IsOptional()
   @IsPositive()
-  offset: number;
+  page: number;
 }

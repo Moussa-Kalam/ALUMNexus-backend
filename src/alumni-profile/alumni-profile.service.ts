@@ -107,27 +107,57 @@ export class AlumniProfileService {
   }
 
   async findAll(paginationQuery: PaginationQueryDto) {
-    const { limit, offset } = paginationQuery;
+    const { limit, page, name, country, gcgo } = paginationQuery;
 
-    const alumni = await this.alumniProfileRepository.find({
-      relations: [
-        'mission',
-        'education',
-        'experiences',
-        'projects',
-        'skills',
-        'gcgos',
-        'user',
-      ],
-      skip: offset,
-      take: limit,
-    });
+    // Calculate the offset based on the page and limit
+    const offset = page ? (page - 1) * limit : 0;
 
-    if (!alumni) {
-      throw new NotFoundException('No alumni profiles found!');
+    const query = this.alumniProfileRepository
+      .createQueryBuilder('alumni')
+      .leftJoinAndSelect('alumni.mission', 'mission')
+      .leftJoinAndSelect('alumni.education', 'education')
+      .leftJoinAndSelect('alumni.experiences', 'experiences')
+      .leftJoinAndSelect('alumni.projects', 'projects')
+      .leftJoinAndSelect('alumni.skills', 'skills')
+      .leftJoinAndSelect('alumni.gcgos', 'gcgos')
+      .leftJoinAndSelect('alumni.user', 'user');
+
+    if (name) {
+      query.andWhere(
+        '(LOWER(user.firstName) LIKE LOWER(:name) OR LOWER(user.lastName) LIKE LOWER(:name))',
+        { name: `%${name}%` },
+      );
     }
 
-    return alumni;
+    if (country) {
+      query.andWhere('LOWER(alumni.country) LIKE LOWER(:country)', {
+        country: `%${country}%`,
+      });
+    }
+
+    if (gcgo) {
+      query.andWhere('gcgos.name ILIKE :gcgo', { gcgo: `%${gcgo}%` });
+    }
+
+    // Get the total count of alumni profiles
+    const total = await query.getCount();
+
+    if (page) {
+      query.skip(offset).take(limit);
+    }
+
+    const alumni = await query.getMany();
+
+    // Ensure all related gcgos are included in the result
+    for (const alumnus of alumni) {
+      alumnus.gcgos = await this.alumniProfileRepository
+        .createQueryBuilder('alumni')
+        .relation(AlumniProfile, 'gcgos')
+        .of(alumnus)
+        .loadMany();
+    }
+
+    return { profiles: alumni, total };
   }
 
   findOne(id: string) {

@@ -33,6 +33,11 @@ export class OpportunityController {
     return this.opportunityService.findAll();
   }
 
+  @Get('recent')
+  findRecent() {
+    return this.opportunityService.findRecent();
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.opportunityService.findOne(id);
