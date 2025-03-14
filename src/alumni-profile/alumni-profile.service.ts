@@ -169,12 +169,15 @@ export class AlumniProfileService {
           'education',
           'experiences',
           'projects',
+          'gcgos',
           'skills',
         ],
       });
       if (!alumni) {
-        throw new NotFoundException();
+        throw new NotFoundException('Alumnus not found!');
       }
+
+      return alumni;
     } catch (error) {
       throw error;
     }
