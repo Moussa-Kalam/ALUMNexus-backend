@@ -12,6 +12,14 @@ export class PaginationQueryDto {
   @IsOptional()
   @IsString()
   gcgo?: string;
+  
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  category?: string;
 
   @IsOptional()
   @IsPositive()

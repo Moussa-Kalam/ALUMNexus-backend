@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { CreateOpportunityDto } from './dto/create-opportunity.dto';
 import { UpdateOpportunityDto } from './dto/update-opportunity.dto';
@@ -14,6 +15,7 @@ import { ActiveUser } from '../iam/decorators/active-user-decorator';
 import { ActiveUserData } from '../iam/interfaces/active-user-data.interface';
 import { Roles } from '../iam/authorization/decorators/roles.decorator';
 import { UserRoles } from '../common/enums/roles.enum';
+import { PaginationQueryDto } from '../common/dto/pagination-query.dto';
 
 @Controller('opportunity')
 export class OpportunityController {
@@ -29,8 +31,8 @@ export class OpportunityController {
   }
 
   @Get()
-  findAll() {
-    return this.opportunityService.findAll();
+  findAll(@Query() paginationQuery: PaginationQueryDto) {
+    return this.opportunityService.findAll(paginationQuery);
   }
 
   @Get('recent')
