@@ -45,7 +45,8 @@ export class OpportunityService {
 
     const query = this.opportunityRepository
       .createQueryBuilder('opportunity')
-      .leftJoinAndSelect('opportunity.alumnus', 'alumnus');
+      .leftJoinAndSelect('opportunity.alumnus', 'alumnus')
+      .orderBy('opportunity.createdAt', 'DESC');
 
     if (title) {
       query.andWhere('LOWER(opportunity.title) ILIKE LOWER(:title)', {
