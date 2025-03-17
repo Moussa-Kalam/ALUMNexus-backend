@@ -25,7 +25,6 @@ export class OpportunityService {
       const alumnus = await this.alumniProfileService.findOneByUserId(
         activeUser.sub,
       );
-
       // Create a new opportunity and connect that alumnus with the opportunity
       const opportunity = this.opportunityRepository.create({
         ...createOpportunityDto,
@@ -46,6 +45,7 @@ export class OpportunityService {
     const query = this.opportunityRepository
       .createQueryBuilder('opportunity')
       .leftJoinAndSelect('opportunity.alumnus', 'alumnus')
+      .where('opportunity.deadline > NOW()')
       .orderBy('opportunity.createdAt', 'DESC');
 
     if (title) {

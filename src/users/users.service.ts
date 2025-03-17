@@ -15,8 +15,11 @@ export class UsersService {
   //   return 'This action adds a new user';
   // }
 
-  findAll() {
-    return this.userRepository.find();
+  async findAll() {
+    const users = await this.userRepository.find();
+    const total = await this.userRepository.count();
+
+    return { users, total };
   }
 
   async findUserById(id: string) {
