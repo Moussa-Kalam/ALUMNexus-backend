@@ -45,7 +45,7 @@ export class OpportunityService {
     const query = this.opportunityRepository
       .createQueryBuilder('opportunity')
       .leftJoinAndSelect('opportunity.alumnus', 'alumnus')
-      .where('opportunity.deadline > NOW()')
+      .where('CAST(opportunity.deadline AS timestamp) > NOW()')
       .orderBy('opportunity.createdAt', 'DESC');
 
     if (title) {
