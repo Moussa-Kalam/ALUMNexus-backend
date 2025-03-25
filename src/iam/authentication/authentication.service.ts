@@ -111,6 +111,8 @@ export class AuthenticationService {
 
     user.password = newHashedPassword;
     await this.userRepository.save(user);
+
+    return { message: 'Password changed successfully!' };
   }
 
   public async generateTokens(user: User) {

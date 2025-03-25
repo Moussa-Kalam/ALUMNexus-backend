@@ -200,21 +200,14 @@ export class AlumniProfileService {
     }
   }
 
-  update(id: string, updateAlumniProfileDto: UpdateAlumniProfileDto) {
-    this.findOne(id);
-    try {
-      return this.alumniProfileRepository.update(id, updateAlumniProfileDto);
-    } catch (error) {
-      throw error;
-    }
+  async update(id: string, updateAlumniProfileDto: UpdateAlumniProfileDto) {
+    await this.findOne(id);
+    await this.alumniProfileRepository.update(id, updateAlumniProfileDto);
+    return { message: 'Profile updated successfully!' };
   }
 
-  remove(id: string) {
-    this.findOne(id);
-    try {
-      return this.alumniProfileRepository.delete(id);
-    } catch (error) {
-      throw error;
-    }
+  async remove(id: string) {
+    await this.findOne(id);
+    await this.alumniProfileRepository.delete(id);
   }
 }

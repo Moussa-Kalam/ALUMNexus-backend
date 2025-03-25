@@ -72,7 +72,6 @@ export class AuthenticationController {
     return toFileStream(response, uri);
   }
 
-  // TODO: POST Change Password
   @Patch('change-password')
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
