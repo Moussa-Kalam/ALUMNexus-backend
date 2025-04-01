@@ -39,5 +39,8 @@ export class User {
   tfaSecret: string;
 
   @Column({ nullable: true })
+  temporaryTfaSecret: string;
+
+  @Column({ nullable: true })
   googleId: string;
 }

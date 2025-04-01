@@ -24,6 +24,21 @@ export class OtpAuthenticationService {
     };
   }
 
+  async storeTemporarySecret(email: string, secret: string) {
+    const { id } = await this.userRepository.findOneOrFail({
+      where: { email },
+      select: { id: true },
+    });
+
+    // Encrypt the secret before storing it in the database
+    const encryptedSecret = this.encryptSecret(secret);
+
+    await this.userRepository.update(
+      { id },
+      { temporaryTfaSecret: encryptedSecret },
+    );
+  }
+
   verifyCode(code: string, secret: string) {
     const decryptedSecret = this.decryptSecret(secret);
 
@@ -39,11 +54,9 @@ export class OtpAuthenticationService {
       select: { id: true },
     });
 
-    const encryptedSecret = this.encryptSecret(secret);
-
     await this.userRepository.update(
       { id },
-      { tfaSecret: encryptedSecret, isTfaEnabled: true },
+      { tfaSecret: secret, isTfaEnabled: true },
     );
   }
 

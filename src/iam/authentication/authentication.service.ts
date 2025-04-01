@@ -71,6 +71,9 @@ export class AuthenticationService {
     }
 
     if (user.isTfaEnabled) {
+      if (!signInDto.tfaCode)
+        throw new UnauthorizedException('2FA code required');
+
       const isValid = this.optAuthenticationService.verifyCode(
         signInDto.tfaCode,
         user.tfaSecret,

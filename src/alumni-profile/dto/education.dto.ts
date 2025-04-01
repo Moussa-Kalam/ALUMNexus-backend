@@ -9,4 +9,7 @@ export class EducationDto {
 
   @IsNumber()
   graduationYear: number;
+
+  @IsString()
+  institution: string;
 }
