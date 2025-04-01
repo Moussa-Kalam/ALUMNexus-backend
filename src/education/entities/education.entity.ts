@@ -15,6 +15,9 @@ export class Education {
   @Column()
   graduationYear: number;
 
+  @Column()
+  institution: string;
+
   @ManyToOne(() => AlumniProfile, (alumnus) => alumnus.education, {
     cascade: true,
   })

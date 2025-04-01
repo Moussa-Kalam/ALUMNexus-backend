@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateEducationDto {
   @IsString()
@@ -9,4 +9,7 @@ export class CreateEducationDto {
 
   @IsNumber()
   graduationYear: number;
+
+  @IsString()
+  institution: string;
 }
