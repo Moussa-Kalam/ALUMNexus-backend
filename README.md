@@ -154,6 +154,9 @@ By adhering to this guide, you'll be able to get your development environment up
 focus on developing the application.
 
 
+## Author
+Moussa Kalam AMZAT - [LinkedIn](https://www.linkedin.com/in/moussakalamamzat)
+
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
